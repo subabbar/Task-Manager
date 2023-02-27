@@ -1,7 +1,16 @@
+using Microsoft.EntityFrameworkCore;
+using TASK_MANAGER.DbContexts;
+using TASK_MANAGER.Service;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
+var connectionString = builder.Configuration["ConnectionString:ProjectDB"];
+builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IProjectService, ProjectService>();
+builder.Services.AddDbContext<ProjectContext>(opts =>
+                                                 opts.UseMySql(connectionString,ServerVersion.AutoDetect(connectionString)));
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
