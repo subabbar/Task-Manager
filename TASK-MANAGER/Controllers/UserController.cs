@@ -34,5 +34,38 @@ namespace TASK_MANAGER.Controllers
                 return BadRequest();
             }
         }
+
+
+        [HttpGet]
+        [Route("[action]")]
+        public IActionResult GetAllUsers()
+        {
+            try
+            {
+                var users = _userService.GetusersList();
+                if (users == null) return NotFound();
+                return Ok(users);
+            }
+            catch (Exception e)
+            {
+                return BadRequest();
+            }
+        }
+
+        [HttpGet]
+        [Route("[action]/id")]
+        public IActionResult GetUserById(int id)
+        {
+            try
+            {
+                var employees = _userService.GetUserDetailsById(id);
+                if (employees == null) return NotFound();
+                return Ok(employees);
+            }
+            catch (Exception)
+            {
+                return BadRequest();
+            }
+        }
     }
 }

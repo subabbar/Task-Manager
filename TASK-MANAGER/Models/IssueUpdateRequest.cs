@@ -5,9 +5,10 @@ using System.Threading.Tasks;
 
 namespace TASK_MANAGER.Models
 {
-    public class ProjectRequest
+    public class IssueUpdateRequest
     {
+        public string Type { get; set; }
         public string Description { get; set; }
-        public int Creator{ get; set; }
+        public int AssigneId { get; set; }
     }
 }

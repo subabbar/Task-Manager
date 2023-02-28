@@ -8,6 +8,8 @@ namespace TASK_MANAGER.Service
 {
     public interface IUserService
     {
+        User GetUserDetailsById(int id);
+        List<User> GetusersList();
         ResponseModel SaveUser(UserRequest userModel);
 
     }

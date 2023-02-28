@@ -31,7 +31,9 @@ namespace TASK_MANAGER.Migrations
                 name: "Users",
                 columns: table => new
                 {
-                    username = table.Column<string>(type: "varchar(255)", nullable: false)
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    username = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Name = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
@@ -40,7 +42,7 @@ namespace TASK_MANAGER.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Users", x => x.username);
+                    table.PrimaryKey("PK_Users", x => x.Id);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
@@ -52,18 +54,17 @@ namespace TASK_MANAGER.Migrations
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     Description = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Creatorusername = table.Column<string>(type: "varchar(255)", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4")
+                    Creator = table.Column<int>(type: "int", nullable: false),
+                    UserId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Projects", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Projects_Users_Creatorusername",
-                        column: x => x.Creatorusername,
+                        name: "FK_Projects_Users_UserId",
+                        column: x => x.UserId,
                         principalTable: "Users",
-                        principalColumn: "username",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
@@ -77,11 +78,10 @@ namespace TASK_MANAGER.Migrations
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Description = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    ReporterId = table.Column<int>(type: "int", nullable: false),
-                    AssigneId = table.Column<int>(type: "int", nullable: false),
-                    status = table.Column<string>(type: "longtext", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    ProjectId = table.Column<int>(type: "int", nullable: true)
+                    status = table.Column<int>(type: "int", nullable: false),
+                    ProjectId = table.Column<int>(type: "int", nullable: true),
+                    AssigneeId = table.Column<int>(type: "int", nullable: true),
+                    ReporterId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -90,6 +90,16 @@ namespace TASK_MANAGER.Migrations
                         name: "FK_Issues_Projects_ProjectId",
                         column: x => x.ProjectId,
                         principalTable: "Projects",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Issues_Users_AssigneeId",
+                        column: x => x.AssigneeId,
+                        principalTable: "Users",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Issues_Users_ReporterId",
+                        column: x => x.ReporterId,
+                        principalTable: "Users",
                         principalColumn: "Id");
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
@@ -125,14 +135,24 @@ namespace TASK_MANAGER.Migrations
                 column: "LabelsId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Issues_AssigneeId",
+                table: "Issues",
+                column: "AssigneeId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Issues_ProjectId",
                 table: "Issues",
                 column: "ProjectId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Projects_Creatorusername",
+                name: "IX_Issues_ReporterId",
+                table: "Issues",
+                column: "ReporterId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Projects_UserId",
                 table: "Projects",
-                column: "Creatorusername");
+                column: "UserId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

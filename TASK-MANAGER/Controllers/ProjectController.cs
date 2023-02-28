@@ -13,10 +13,12 @@ namespace TASK_MANAGER.Controllers
     public class ProjectController : ControllerBase
     {
         IProjectService _projectService;
+
         public ProjectController(IProjectService service)
         {
             _projectService = service;
         }
+
 
         [HttpPost]
         [Route("[action]")]
@@ -25,6 +27,69 @@ namespace TASK_MANAGER.Controllers
             try
             {
                 var model = _projectService.SaveProject(projectModel);
+                return Ok(model);
+            }
+            catch (Exception)
+            {
+                return BadRequest();
+            }
+        }
+
+
+        [HttpGet]
+        public IActionResult GetAllProjects()
+        {
+            try
+            {
+                var projects = _projectService.GetAllProjectsList();
+                if (projects == null) return NotFound();
+                return Ok(projects);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return BadRequest();
+            }
+        }
+
+        [HttpGet]
+        [Route("[action]/id")]
+        public IActionResult GetProjectById(int id)
+        {
+            try
+            {
+                var employees = _projectService.GetProjectDetailsById(id);
+                if (employees == null) return NotFound();
+                return Ok(employees);
+            }
+            catch (Exception)
+            {
+                return BadRequest();
+            }
+        }
+
+        [HttpPost]
+        [Route("[action]/projectId")]
+        public IActionResult UpdateProject(ProjectRequest projectModel, int projectId)
+        {
+            try
+            {
+                var model = _projectService.UpdateProject(projectModel, projectId);
+                return Ok(model);
+            }
+            catch (Exception)
+            {
+                return BadRequest();
+            }
+        }
+
+        [HttpDelete]
+        [Route("[action]")]
+        public IActionResult DeleteProject(int id)
+        {
+            try
+            {
+                var model = _projectService.DeleteProject(id);
                 return Ok(model);
             }
             catch (Exception)

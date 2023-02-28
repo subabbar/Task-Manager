@@ -9,5 +9,9 @@ namespace TASK_MANAGER.Service
     public interface IProjectService
     {
         ResponseModel SaveProject(ProjectRequest projectModel);
+        List<Project> GetAllProjectsList();
+        Project GetProjectDetailsById(int Projectid);
+        ResponseModel UpdateProject(ProjectRequest projectModel,int projectId);
+        ResponseModel DeleteProject(int id);
     }
 }

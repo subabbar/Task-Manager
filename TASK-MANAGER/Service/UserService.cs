@@ -1,3 +1,4 @@
+using System.IO.Compression;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,7 +9,7 @@ using TASK_MANAGER.DbContexts;
 
 namespace TASK_MANAGER.Service
 {
-    public class UserService:IUserService
+    public class UserService : IUserService
     {
         private ProjectContext _context;
         public UserService(ProjectContext context)
@@ -23,7 +24,7 @@ namespace TASK_MANAGER.Service
             try
             {
                 User user = new User()
-                {   
+                {
                     username = userModel.username,
                     Name = userModel.Name,
                     Password = userModel.Password,
@@ -39,6 +40,37 @@ namespace TASK_MANAGER.Service
                 model.Messsage = "Error : " + ex.Message;
             }
             return model;
+        }
+
+
+        public List<User> GetusersList()
+        {
+            List<User> userList;
+            try
+            {
+                userList = _context.Users.Include(z => z.Projects).ToList();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return userList;
+        }
+
+        public User GetUserDetailsById(int id)
+        {
+            User user;
+            try
+            {
+                user = _context.Users.Where(p => p.Id == id)
+            .Include(p => p.Projects)
+            .SingleOrDefault();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return user;
         }
     }
 }

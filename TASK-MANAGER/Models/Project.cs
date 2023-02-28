@@ -12,7 +12,11 @@ namespace TASK_MANAGER.Models
         [Key]
         public int Id { get; set; }
         public string Description { get; set; }
-        public User Creator{ get; set; }
-        public ICollection<Issue> Issues { get; set; }
+
+        public int  Creator{ get; set; }
+
+        public User? User { get; set; }
+        public ICollection<Issue>? Issues { get; set; }
+
     }
 }

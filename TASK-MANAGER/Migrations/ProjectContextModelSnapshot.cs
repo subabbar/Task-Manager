@@ -40,7 +40,7 @@ namespace TASK_MANAGER.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<int>("AssigneId")
+                    b.Property<int?>("AssigneeId")
                         .HasColumnType("int");
 
                     b.Property<string>("Description")
@@ -50,20 +50,23 @@ namespace TASK_MANAGER.Migrations
                     b.Property<int?>("ProjectId")
                         .HasColumnType("int");
 
-                    b.Property<int>("ReporterId")
+                    b.Property<int?>("ReporterId")
                         .HasColumnType("int");
 
                     b.Property<string>("Type")
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.Property<string>("status")
-                        .IsRequired()
-                        .HasColumnType("longtext");
+                    b.Property<int>("status")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
+                    b.HasIndex("AssigneeId");
+
                     b.HasIndex("ProjectId");
+
+                    b.HasIndex("ReporterId");
 
                     b.ToTable("Issues");
                 });
@@ -89,25 +92,28 @@ namespace TASK_MANAGER.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<string>("Creatorusername")
-                        .IsRequired()
-                        .HasColumnType("varchar(255)");
+                    b.Property<int>("Creator")
+                        .HasColumnType("int");
 
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("longtext");
 
+                    b.Property<int?>("UserId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
-                    b.HasIndex("Creatorusername");
+                    b.HasIndex("UserId");
 
                     b.ToTable("Projects");
                 });
 
             modelBuilder.Entity("TASK_MANAGER.Models.User", b =>
                 {
-                    b.Property<string>("username")
-                        .HasColumnType("varchar(255)");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -117,7 +123,11 @@ namespace TASK_MANAGER.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.HasKey("username");
+                    b.Property<string>("username")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.HasKey("Id");
 
                     b.ToTable("Users");
                 });
@@ -139,20 +149,32 @@ namespace TASK_MANAGER.Migrations
 
             modelBuilder.Entity("TASK_MANAGER.Models.Issue", b =>
                 {
-                    b.HasOne("TASK_MANAGER.Models.Project", null)
+                    b.HasOne("TASK_MANAGER.Models.User", "Assignee")
+                        .WithMany()
+                        .HasForeignKey("AssigneeId");
+
+                    b.HasOne("TASK_MANAGER.Models.Project", "Project")
                         .WithMany("Issues")
                         .HasForeignKey("ProjectId");
+
+                    b.HasOne("TASK_MANAGER.Models.User", "Reporter")
+                        .WithMany()
+                        .HasForeignKey("ReporterId");
+
+                    b.Navigation("Assignee");
+
+                    b.Navigation("Project");
+
+                    b.Navigation("Reporter");
                 });
 
             modelBuilder.Entity("TASK_MANAGER.Models.Project", b =>
                 {
-                    b.HasOne("TASK_MANAGER.Models.User", "Creator")
+                    b.HasOne("TASK_MANAGER.Models.User", "User")
                         .WithMany("Projects")
-                        .HasForeignKey("Creatorusername")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("UserId");
 
-                    b.Navigation("Creator");
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("TASK_MANAGER.Models.Project", b =>
