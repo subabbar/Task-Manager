@@ -149,6 +149,22 @@ namespace TASK_MANAGER.Service
         }
         return model;
         }
+
+        public List<Project> GetPojectByUserid(int userid)
+        {   
+            List<Project> projectList;
+            try
+            {   
+                User user=_context.Find<User>(userid);
+                Console.WriteLine(user.Projects);
+                projectList=_context.Projects.Where(z => z.Creator==userid).Include(x => x.Issues).ToList();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return projectList;
+        }
     }
 
 }

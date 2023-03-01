@@ -11,7 +11,7 @@ using TASK_MANAGER.DbContexts;
 namespace TASK_MANAGER.Migrations
 {
     [DbContext(typeof(ProjectContext))]
-    [Migration("20230228081715_intial")]
+    [Migration("20230301073705_intial")]
     partial class intial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -20,21 +20,6 @@ namespace TASK_MANAGER.Migrations
             modelBuilder
                 .HasAnnotation("ProductVersion", "6.0.0")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
-
-            modelBuilder.Entity("IssueLabel", b =>
-                {
-                    b.Property<int>("IssuesId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("LabelsId")
-                        .HasColumnType("int");
-
-                    b.HasKey("IssuesId", "LabelsId");
-
-                    b.HasIndex("LabelsId");
-
-                    b.ToTable("IssueLabel");
-                });
 
             modelBuilder.Entity("TASK_MANAGER.Models.Issue", b =>
                 {
@@ -79,11 +64,16 @@ namespace TASK_MANAGER.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
+                    b.Property<int?>("IssueId")
+                        .HasColumnType("int");
+
                     b.Property<string>("desc")
                         .IsRequired()
                         .HasColumnType("longtext");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("IssueId");
 
                     b.ToTable("Labels");
                 });
@@ -134,21 +124,6 @@ namespace TASK_MANAGER.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("IssueLabel", b =>
-                {
-                    b.HasOne("TASK_MANAGER.Models.Issue", null)
-                        .WithMany()
-                        .HasForeignKey("IssuesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("TASK_MANAGER.Models.Label", null)
-                        .WithMany()
-                        .HasForeignKey("LabelsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("TASK_MANAGER.Models.Issue", b =>
                 {
                     b.HasOne("TASK_MANAGER.Models.User", "Assignee")
@@ -170,6 +145,15 @@ namespace TASK_MANAGER.Migrations
                     b.Navigation("Reporter");
                 });
 
+            modelBuilder.Entity("TASK_MANAGER.Models.Label", b =>
+                {
+                    b.HasOne("TASK_MANAGER.Models.Issue", "Issue")
+                        .WithMany("Labels")
+                        .HasForeignKey("IssueId");
+
+                    b.Navigation("Issue");
+                });
+
             modelBuilder.Entity("TASK_MANAGER.Models.Project", b =>
                 {
                     b.HasOne("TASK_MANAGER.Models.User", "User")
@@ -177,6 +161,11 @@ namespace TASK_MANAGER.Migrations
                         .HasForeignKey("UserId");
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("TASK_MANAGER.Models.Issue", b =>
+                {
+                    b.Navigation("Labels");
                 });
 
             modelBuilder.Entity("TASK_MANAGER.Models.Project", b =>

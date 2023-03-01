@@ -26,7 +26,7 @@ namespace TASK_MANAGER.Service
              temp.Assignee=user;
              _context.SaveChanges();
               model.IsSuccess = true;
-              model.Messsage = "Project Deleted Successfully";
+              model.Messsage = "Issue assigned to User";
               return model;
         }
 
@@ -45,12 +45,12 @@ namespace TASK_MANAGER.Service
                     project.Issues.Remove(_temp);
                     _context.SaveChanges();
                     model.IsSuccess = true;
-                    model.Messsage = "Project Deleted Successfully";
+                    model.Messsage = "Issue Deleted Successfully";
                 }
                 else
                 {
                     model.IsSuccess = false;
-                    model.Messsage = "Project Not Found";
+                    model.Messsage = "Issue Not Found";
                 }
             }
             catch (Exception ex)
@@ -91,6 +91,36 @@ namespace TASK_MANAGER.Service
                 throw;
             }
             return issue;
+        }
+
+        public ResponseModel ResetStatus(int issueid,int statusid)
+        {
+            ResponseModel model = new ResponseModel();
+            try
+            {   
+                string[] Status={"open","InReview","CodeComplete","QA Testing ","Done Status"};
+                Issue issue;
+                issue=_context.Find<Issue>(issueid);
+                if(statusid<0 && statusid>4){
+                    model.Messsage = "Enter valid status id";
+                    return model;
+                }
+                if(statusid>issue.status){
+                    model.Messsage = "Complete the status in right order";
+                    return model;
+                }
+                issue.status=issue.status;
+                model.Messsage = "Issue status updated Successfully  Status:  "+ Status[issue.status];
+                _context.SaveChanges();
+                // Console.WriteLine("Creater of Project "+project.Creator.Id);
+                model.IsSuccess = true;
+            }
+            catch (Exception ex)
+            {
+                model.IsSuccess = false;
+                model.Messsage = "Error : " + ex.Message;
+            }
+            return model;
         }
 
         public ResponseModel SaveIssue(IssueRequest issueModel, int ProjectId,int ReporterId)
@@ -140,7 +170,33 @@ namespace TASK_MANAGER.Service
                 issue.Description=issueModel.Description;
 
                 _context.Update<Issue>(issue);
-                model.Messsage = "Employee Inserted Successfully";
+                model.Messsage = "Issue Update Successfully";
+                _context.SaveChanges();
+                // Console.WriteLine("Creater of Project "+project.Creator.Id);
+                model.IsSuccess = true;
+            }
+            catch (Exception ex)
+            {
+                model.IsSuccess = false;
+                model.Messsage = "Error : " + ex.Message;
+            }
+            return model;
+        }
+
+        public ResponseModel UpdateStatus(int issueid)
+        {
+            ResponseModel model = new ResponseModel();
+            try
+            {   
+                string[] Status={"open","InReview","CodeComplete","QA Testing ","Done Status"};
+                Issue issue;
+                issue=_context.Find<Issue>(issueid);
+                if(issue.status==4){
+                    model.Messsage = "Issue is resolved" + Status[issue.status];
+                    return model;
+                }
+                issue.status=issue.status+1;
+                model.Messsage = "Issue status updated Successfully  Stateus:  "+ Status[issue.status];
                 _context.SaveChanges();
                 // Console.WriteLine("Creater of Project "+project.Creator.Id);
                 model.IsSuccess = true;

@@ -68,7 +68,7 @@ namespace TASK_MANAGER.Controllers
             }
         }
 
-        [HttpPost]
+        [HttpPut]
         [Route("[action]/projectId")]
         public IActionResult UpdateProject(ProjectRequest projectModel, int projectId)
         {
@@ -91,6 +91,22 @@ namespace TASK_MANAGER.Controllers
             {
                 var model = _projectService.DeleteProject(id);
                 return Ok(model);
+            }
+            catch (Exception)
+            {
+                return BadRequest();
+            }
+        }
+
+        [HttpGet]
+        [Route("[action]/userid")]
+        public IActionResult GetPojectByUserid(int userid)
+        {
+            try
+            {
+                var employees = _projectService.GetPojectByUserid(userid);
+                if (employees == null) return NotFound();
+                return Ok(employees);
             }
             catch (Exception)
             {

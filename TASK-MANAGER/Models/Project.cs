@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
+using Newtonsoft.Json;
 
 namespace TASK_MANAGER.Models
 {
@@ -15,8 +16,10 @@ namespace TASK_MANAGER.Models
 
         public int  Creator{ get; set; }
 
-        public User? User { get; set; }
         public ICollection<Issue>? Issues { get; set; }
+
+        [JsonIgnore]
+        public User? User { get; set; }
 
     }
 }

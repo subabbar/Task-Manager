@@ -10,6 +10,7 @@ var connectionString = builder.Configuration["ConnectionString:ProjectDB"];
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IProjectService, ProjectService>();
 builder.Services.AddScoped<IIssueService, IssueService>();
+builder.Services.AddScoped<ILabelService, LabelService>();
 builder.Services.AddDbContext<ProjectContext>(opts =>
                                                  opts.UseMySql(connectionString,ServerVersion.AutoDetect(connectionString)));
 builder.Services.AddControllers().AddNewtonsoftJson(options =>

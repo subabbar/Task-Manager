@@ -82,7 +82,7 @@ namespace TASK_MANAGER.Controllers
             }
         }
 
-        [HttpPost]
+        [HttpPut]
         [Route("[action]/issueId")]
         public IActionResult UpdateIssue(IssueUpdateRequest issueModel, int issueId)
         {
@@ -104,6 +104,36 @@ namespace TASK_MANAGER.Controllers
             try
             {
                 var model = _issueService.AssignIssueToUser(AssigneeId,ProjectId);
+                return Ok(model);
+            }
+            catch (Exception)
+            {
+                return BadRequest();
+            }
+        }
+
+        [HttpPut]
+        [Route("[action]/issueid")]
+        public IActionResult UpdateStatus(int issueid)
+        {
+            try
+            {
+                var model = _issueService.UpdateStatus(issueid);
+                return Ok(model);
+            }
+            catch (Exception)
+            {
+                return BadRequest();
+            }
+        }
+
+        [HttpPut]
+        [Route("[action]")]
+        public IActionResult ResetStatus(int issueid,int statusid)
+        {
+            try
+            {
+                var model = _issueService.ResetStatus(issueid,statusid);
                 return Ok(model);
             }
             catch (Exception)

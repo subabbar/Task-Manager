@@ -13,5 +13,6 @@ namespace TASK_MANAGER.Service
         Project GetProjectDetailsById(int Projectid);
         ResponseModel UpdateProject(ProjectRequest projectModel,int projectId);
         ResponseModel DeleteProject(int id);
+        List<Project> GetPojectByUserid(int userid);
     }
 }

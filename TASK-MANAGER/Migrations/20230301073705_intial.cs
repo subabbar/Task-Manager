@@ -13,21 +13,6 @@ namespace TASK_MANAGER.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "Labels",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    desc = table.Column<string>(type: "longtext", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4")
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Labels", x => x.Id);
-                })
-                .Annotation("MySql:CharSet", "utf8mb4");
-
-            migrationBuilder.CreateTable(
                 name: "Users",
                 columns: table => new
                 {
@@ -105,34 +90,25 @@ namespace TASK_MANAGER.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "IssueLabel",
+                name: "Labels",
                 columns: table => new
                 {
-                    IssuesId = table.Column<int>(type: "int", nullable: false),
-                    LabelsId = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    desc = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    IssueId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_IssueLabel", x => new { x.IssuesId, x.LabelsId });
+                    table.PrimaryKey("PK_Labels", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_IssueLabel_Issues_IssuesId",
-                        column: x => x.IssuesId,
+                        name: "FK_Labels_Issues_IssueId",
+                        column: x => x.IssueId,
                         principalTable: "Issues",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_IssueLabel_Labels_LabelsId",
-                        column: x => x.LabelsId,
-                        principalTable: "Labels",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_IssueLabel_LabelsId",
-                table: "IssueLabel",
-                column: "LabelsId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Issues_AssigneeId",
@@ -150,6 +126,11 @@ namespace TASK_MANAGER.Migrations
                 column: "ReporterId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Labels_IssueId",
+                table: "Labels",
+                column: "IssueId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Projects_UserId",
                 table: "Projects",
                 column: "UserId");
@@ -158,13 +139,10 @@ namespace TASK_MANAGER.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "IssueLabel");
+                name: "Labels");
 
             migrationBuilder.DropTable(
                 name: "Issues");
-
-            migrationBuilder.DropTable(
-                name: "Labels");
 
             migrationBuilder.DropTable(
                 name: "Projects");

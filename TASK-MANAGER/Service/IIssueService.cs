@@ -12,7 +12,9 @@ namespace TASK_MANAGER.Service
         ResponseModel DeleteIssue(int id);
         List<Issue> GetAllIssuesList();
         Issue GetIssueDetailsById(int id);
+        ResponseModel ResetStatus(int issueid,int statusid);
         ResponseModel SaveIssue(IssueRequest issueModel,int projectId,int ReporterId);
         ResponseModel UpdateProject(IssueUpdateRequest issueModel, int issueId);
+        ResponseModel UpdateStatus(int issueid);
     }
 }
